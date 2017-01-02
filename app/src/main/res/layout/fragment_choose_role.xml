@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/choose_role_background"
+    android:gravity="center">
+
+    <com.kerer.taxiapp.custom_views.RobotoRegularTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/choose_yours_role"
+        android:gravity="center"
+        android:layout_marginBottom="36dp"
+        android:textSize="@dimen/fragment_chose_role_title_text_size"
+        android:textColor="@android:color/white"/>
+
+    <com.kerer.taxiapp.custom_views.RoboroRegularButton
+        android:id="@+id/fragment_choose_role_driver_button"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:text="@string/i_am_driver"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/choose_role_button_text_size"
+        android:background="@drawable/choose_role_button_background"
+        android:layout_margin="@dimen/choose_role_buttons_margin"/>
+
+    <com.kerer.taxiapp.custom_views.RoboroRegularButton
+        android:id="@+id/fragment_choose_role_client_button"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:text="@string/i_am_client"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/choose_role_button_text_size"
+        android:background="@drawable/choose_role_button_background"
+        android:layout_margin="@dimen/choose_role_buttons_margin"/>
+
+
+</LinearLayout>
