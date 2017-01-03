@@ -29,6 +29,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 /**
  * Created by ivan on 03.01.17.
@@ -57,6 +58,8 @@ public class DriverSignUpFragment extends Fragment implements View.OnClickListen
     EditText mDriverPhoneEd;
     @BindView(R.id.fragment_sign_up_login_button)
     Button mSignUp;
+    @BindView(R.id.fragment_sign_up_progress)
+    SmoothProgressBar mProgress;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -72,7 +75,6 @@ public class DriverSignUpFragment extends Fragment implements View.OnClickListen
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                Log.d(TAG, firebaseAuth.getCurrentUser().getUid());
 
             }
         };
@@ -101,6 +103,8 @@ public class DriverSignUpFragment extends Fragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         if (checkFields()) {
+            mProgress.setVisibility(View.VISIBLE);
+
             String email = mDriverEmailEd.getText().toString();
             String password = mDriverPasswordEd.getText().toString();
 
@@ -118,6 +122,7 @@ public class DriverSignUpFragment extends Fragment implements View.OnClickListen
                         public void onFailure(@NonNull Exception e) {
                             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT)
                                     .show();
+                            mProgress.setVisibility(View.INVISIBLE);
                         }
                     });
         }
@@ -136,6 +141,7 @@ public class DriverSignUpFragment extends Fragment implements View.OnClickListen
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT)
                                 .show();
+                        mProgress.setVisibility(View.INVISIBLE);
                     }
                 });
     }
