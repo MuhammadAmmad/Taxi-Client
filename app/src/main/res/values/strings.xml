@@ -15,4 +15,7 @@
     <string name="car_number">Car number</string>
     <string name="sign_in">Sign In</string>
     <string name="sign_up">Sign Up</string>
+    <string name="phone">Phone</string>
+    <string name="minimal_length_6_symbols">Minimal length 6 symbols</string>
+    <string name="field_must_filled">Field must be filled</string>
 </resources>
