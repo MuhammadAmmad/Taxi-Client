@@ -8,11 +8,29 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="LoginActivityThame" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="ChooseRoleActivityThame" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorChooseRoleDark</item>
         <item name="colorPrimaryDark">@color/colorChooseRoleLight</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlNormal">#c5c5c5</item>
     </style>
+
+
+    <style name="SignInActivityThame" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorSignInCardBackgrounf</item>
+        <item name="colorPrimaryDark">@color/colorSignInBackground</item>
+        <item name="colorAccent">@color/colorChooseRoleLight</item>
+        <item name="colorControlNormal">#9e9e9e</item>
+
+    </style>
+
+    <style name="SignInEditTextStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@color/colorSignInCardBackgrounf</item>
+        <item name="android:textColorHint">@android:color/white</item>
+        <item name="android:layout_marginTop">8dp</item>
+
+    </style>
+
 </resources>

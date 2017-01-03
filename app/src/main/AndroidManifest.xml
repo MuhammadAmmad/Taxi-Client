@@ -9,14 +9,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ChooseRoleActivity"
-            android:theme="@style/LoginActivityThame">
+            android:theme="@style/ChooseRoleActivityThame">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SignInActivity"/>
+        <activity android:name=".SignInActivity"
+            android:theme="@style/SignInActivityThame"
+            android:parentActivityName=".ChooseRoleActivity"/>
     </application>
 
 </manifest>

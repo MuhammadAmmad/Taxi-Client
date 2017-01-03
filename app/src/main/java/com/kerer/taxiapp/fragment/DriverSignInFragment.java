@@ -22,7 +22,7 @@ public class DriverSignInFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_driver_sign_in, container, false);
+        View v = inflater.inflate(R.layout.fragment_sign_in, container, false);
 
         return v;
     }

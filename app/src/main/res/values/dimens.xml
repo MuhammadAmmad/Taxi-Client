@@ -5,4 +5,7 @@
     <dimen name="choose_role_buttons_margin">8dp</dimen>
     <dimen name="choose_role_button_text_size">16sp</dimen>
     <dimen name="fragment_chose_role_title_text_size">18sp</dimen>
+    <dimen name="cardview_lr_padding">32dp</dimen>
+    <dimen name="cardview_tb_padding">8dp</dimen>
+    <dimen name="views_margin">16dp</dimen>
 </resources>
