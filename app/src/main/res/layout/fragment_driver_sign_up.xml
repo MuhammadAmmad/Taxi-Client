@@ -42,7 +42,7 @@
                 android:textColorHint="#fff">
 
                 <com.kerer.taxiapp.custom_views.RobotoRegularEditText
-                    android:id="@+id/fragment_sign_up_name_ed"
+                    android:id="@+id/fragment_sign_up_car_number_ed"
                     style="@style/SignInEditTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -1,19 +1,5 @@
 package com.kerer.taxiapp.fragment;
-/*
-    @BindView(R.id.fragment_sign_up_car_model_ed)
-    EditText mClientCarInfoEd;
-    @BindView(R.id.fragment_sign_up_name_ed)
-    EditText mClientCarNumberEd;
-    @BindView(R.id.fragment_sign_up_name_ed)
-    EditText mClientNameEd;
-    @BindView(R.id.fragment_sign_up_surname_ed)
-    EditText mClientSurNameEd;
-    @BindView(R.id.fragment_sign_up_email_ed)
-    EditText mClientEmailEd;
-    @BindView(R.id.fragment_sign_up_password_ed)
-    EditText mClientPasswordEd;
-    @BindView(R.id.fragment_sign_up_phone_ed)
-    Button mClientPhoneEd;*/
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -85,9 +71,6 @@ public class ClientSignUpFragment extends Fragment implements View.OnClickListen
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = mAuth.getCurrentUser();
-                if (user != null) {
-                    createUser();
-                }
             }
         };
 
@@ -121,7 +104,7 @@ public class ClientSignUpFragment extends Fragment implements View.OnClickListen
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                Log.d(TAG, "Creating user succesful");
+                                createUser();
                             }
                         }
                     })
@@ -147,6 +130,7 @@ public class ClientSignUpFragment extends Fragment implements View.OnClickListen
 
         if (mClientPasswordEd.getText().length() < 6) {
             mClientPasswordEd.setError(getString(R.string.minimal_length_6_symbols));
+            isFileed = false;
         }
 
         for (EditText item : mEdits) {
@@ -158,7 +142,7 @@ public class ClientSignUpFragment extends Fragment implements View.OnClickListen
         return isFileed;
     }
 
-    private void createUser(){
+    private void createUser() {
         Client client = new Client();
         client.setmName(mClientNameEd.getText().toString());
         client.setmSurname(mClientSurNameEd.getText().toString());
@@ -166,8 +150,23 @@ public class ClientSignUpFragment extends Fragment implements View.OnClickListen
         client.setuId(mAuth.getCurrentUser().getUid());
         client.setBanned(false);
 
-        mDatabase.child(Constants.DB_CLIENTS).push().setValue(client);
+        mDatabase.child(Constants.DB_CLIENTS).push().setValue(client)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.d(TAG, String.valueOf(task.isSuccessful()));
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                });
+        ;
     }
+
     @Override
     public void onStart() {
         super.onStart();
