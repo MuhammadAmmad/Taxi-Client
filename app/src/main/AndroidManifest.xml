@@ -20,12 +20,10 @@
         <activity
             android:name=".SignInActivity"
             android:label="@string/sign_in"
-            android:parentActivityName=".ChooseRoleActivity"
             android:theme="@style/SignInActivityThame" />
         <activity
             android:name=".SignUpActivity"
             android:label="@string/sign_up"
-            android:parentActivityName=".SignInActivity"
             android:theme="@style/SignInActivityThame" />
     </application>
 

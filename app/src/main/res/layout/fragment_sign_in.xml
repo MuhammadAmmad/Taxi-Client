@@ -58,7 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/views_margin"
-                android:background="@color/colorChooseRoleLight"
+                android:background="@drawable/accent_buttons_riple_background"
                 android:text="@string/login"
                 android:textColor="@android:color/white" />
 
@@ -78,8 +78,7 @@
         android:id="@+id/fragment_sign_in_create_acount_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorAccent"
-        android:text="@string/create_an_acout"
+        android:background="@drawable/accent_buttons_riple_background"        android:text="@string/create_an_acout"
         android:textColor="@android:color/white"
         android:layout_alignParentBottom="true"/>
 </RelativeLayout>

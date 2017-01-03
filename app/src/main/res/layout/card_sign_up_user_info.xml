@@ -81,8 +81,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/views_margin"
-            android:background="@color/colorChooseRoleLight"
-            android:text="@string/create_an_acout"
+            android:background="@drawable/accent_buttons_riple_background"            android:text="@string/create_an_acout"
             android:textColor="@android:color/white"
             android:layout_marginBottom="16dp"/>
 
