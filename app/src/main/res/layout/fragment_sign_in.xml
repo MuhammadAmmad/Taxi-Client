@@ -5,80 +5,102 @@
     android:background="@color/colorSignInBackground"
     android:orientation="vertical">
 
+
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorSignInCardBackgrounf"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/cardview_tb_padding"
-            android:paddingLeft="@dimen/cardview_lr_padding"
-            android:paddingRight="@dimen/cardview_lr_padding"
-            android:paddingTop="@dimen/cardview_tb_padding">
+            android:layout_height="match_parent"
+            android:background="@color/colorSignInCardBackgrounf">
 
-            <android.support.design.widget.TextInputLayout
+            <fr.castorflex.android.smoothprogressbar.SmoothProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/fragment_sign_in_progress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/views_margin"
-                android:textColorHint="#fff">
+                android:indeterminate="true"
+                android:visibility="invisible"
+                app:spb_colors="@array/progress_colors"
+                app:spb_progressiveStart_activated="true"
+                app:spb_progressiveStart_speed="3"
+                app:spb_sections_count="1"
+                app:spb_speed="2.0" />
 
-                <com.kerer.taxiapp.custom_views.RobotoRegularEditText
-                    android:id="@+id/fragment_sign_in_email_ed"
-                    style="@style/SignInEditTextStyle"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/fragment_sign_in_progress"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/cardview_tb_padding"
+                android:paddingLeft="@dimen/cardview_lr_padding"
+                android:paddingRight="@dimen/cardview_lr_padding"
+                android:paddingTop="@dimen/cardview_tb_padding">
+
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/email"
-                    android:lines="1"
-                    android:maxLines="1"
-                    android:inputType="textEmailAddress"/>
+                    android:layout_marginTop="@dimen/views_margin"
+                    android:textColorHint="#fff">
 
-            </android.support.design.widget.TextInputLayout>
+                    <com.kerer.taxiapp.custom_views.RobotoRegularEditText
+                        android:id="@+id/fragment_sign_in_email_ed"
+                        style="@style/SignInEditTextStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/email"
+                        android:inputType="textEmailAddress"
+                        android:lines="1"
+                        android:maxLines="1" />
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/views_margin"
-                android:textColorHint="#fff">
+                </android.support.design.widget.TextInputLayout>
 
-                <com.kerer.taxiapp.custom_views.RobotoRegularEditText
-                    android:id="@+id/fragment_sign_in_password_ed"
-                    style="@style/SignInEditTextStyle"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/password"
-                    android:inputType="textPassword"/>
-            </android.support.design.widget.TextInputLayout>
+                    android:layout_marginTop="@dimen/views_margin"
+                    android:textColorHint="#fff">
 
-            <com.kerer.taxiapp.custom_views.RoboroRegularButton
-                android:id="@+id/fragment_sign_in_login_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/views_margin"
-                android:background="@drawable/accent_buttons_riple_background"
-                android:text="@string/login"
-                android:textColor="@android:color/white" />
+                    <com.kerer.taxiapp.custom_views.RobotoRegularEditText
+                        android:id="@+id/fragment_sign_in_password_ed"
+                        style="@style/SignInEditTextStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/password"
+                        android:inputType="textPassword" />
+                </android.support.design.widget.TextInputLayout>
 
-            <com.kerer.taxiapp.custom_views.RobotoRegularTextView
-                android:id="@+id/fragment_sign_in_forgot_pass_tv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/views_margin"
-                android:gravity="center"
-                android:text="@string/forgot_password"
-                android:textColor="@color/colorSignInTextViewColor"
-                android:textSize="12dp" />
-        </LinearLayout>
+                <com.kerer.taxiapp.custom_views.RoboroRegularButton
+                    android:id="@+id/fragment_sign_in_login_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/views_margin"
+                    android:background="@drawable/accent_buttons_riple_background"
+                    android:text="@string/login"
+                    android:textColor="@android:color/white" />
+
+                <com.kerer.taxiapp.custom_views.RobotoRegularTextView
+                    android:id="@+id/fragment_sign_in_forgot_pass_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/views_margin"
+                    android:gravity="center"
+                    android:text="@string/forgot_password"
+                    android:textColor="@color/colorSignInTextViewColor"
+                    android:textSize="12dp" />
+            </LinearLayout>
+        </RelativeLayout>
+
     </android.support.v7.widget.CardView>
 
     <com.kerer.taxiapp.custom_views.RoboroRegularButton
         android:id="@+id/fragment_sign_in_create_acount_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/accent_buttons_riple_background"        android:text="@string/create_an_acout"
-        android:textColor="@android:color/white"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/accent_buttons_riple_background"
+        android:text="@string/create_an_acout"
+        android:textColor="@android:color/white" />
 </RelativeLayout>

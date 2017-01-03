@@ -34,6 +34,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.kerer.taxiapp.Constants;
 import com.kerer.taxiapp.R;
 import com.kerer.taxiapp.model.Client;
 
@@ -90,8 +91,7 @@ public class ClientSignUpFragment extends Fragment implements View.OnClickListen
             }
         };
 
-        mDatabase = FirebaseDatabase.getInstance().getReference()
-                .child("driver");
+        mDatabase = FirebaseDatabase.getInstance().getReference();
     }
 
     @Nullable
@@ -166,7 +166,7 @@ public class ClientSignUpFragment extends Fragment implements View.OnClickListen
         client.setuId(mAuth.getCurrentUser().getUid());
         client.setBanned(false);
 
-        mDatabase.push().setValue(client);
+        mDatabase.child(Constants.DB_CLIENTS).push().setValue(client);
     }
     @Override
     public void onStart() {

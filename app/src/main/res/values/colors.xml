@@ -9,4 +9,5 @@
     <color name="colorSignInCardBackgrounf">#3c444a</color>
     <color name="colorSignInTextViewColor">#97999e</color>
     <color name="colorSignInBackground">#2e373d</color>
+    <color name="colorWhite">#ffffff</color>
 </resources>
