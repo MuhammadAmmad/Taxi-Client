@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.kerer.taxiapp.ClientCreateOrderActivity;
 import com.kerer.taxiapp.R;
 import com.kerer.taxiapp.SignUpActivity;
 
@@ -53,7 +53,6 @@ public class ClientSignInFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
-    private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,16 +62,6 @@ public class ClientSignInFragment extends Fragment {
         if (mUser != null){
             mAuth.signOut();
         }
-
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                mUser = firebaseAuth.getCurrentUser();
-                if (mUser != null){
-                    Log.d(TAG, "Auth is succesful");
-                }
-            }
-        };
     }
 
     @Nullable
@@ -109,7 +98,7 @@ public class ClientSignInFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
-                            Log.d(TAG, "on complate");
+                            startActivity(ClientCreateOrderActivity.createIntent(getActivity()));
                         }
                     }
                 })
@@ -126,14 +115,10 @@ public class ClientSignInFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (mAuthListener != null){
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
     }
 }

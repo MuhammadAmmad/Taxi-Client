@@ -29,6 +29,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 /**
  *
@@ -53,6 +54,8 @@ public class ClientSignUpFragment extends Fragment implements View.OnClickListen
     EditText mClientPhoneEd;
     @BindView(R.id.fragment_sign_up_login_button)
     Button mClientSignUp;
+    @BindView(R.id.fragment_sign_up_progress)
+    SmoothProgressBar mProgress;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -96,6 +99,7 @@ public class ClientSignUpFragment extends Fragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         if (checkFields()) {
+            mProgress.setVisibility(View.VISIBLE);
             String email = mClientEmailEd.getText().toString();
             String password = mClientPasswordEd.getText().toString();
 
@@ -113,6 +117,7 @@ public class ClientSignUpFragment extends Fragment implements View.OnClickListen
                         public void onFailure(@NonNull Exception e) {
                             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT)
                                     .show();
+                            mProgress.setVisibility(View.INVISIBLE);
                         }
                     });
         }
@@ -162,6 +167,7 @@ public class ClientSignUpFragment extends Fragment implements View.OnClickListen
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT)
                                 .show();
+                        mProgress.setVisibility(View.INVISIBLE);
                     }
                 });
         ;
