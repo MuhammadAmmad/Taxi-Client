@@ -19,4 +19,5 @@
     <string name="minimal_length_6_symbols">Minimal length 6 symbols</string>
     <string name="field_must_filled">Field must be filled</string>
     <string name="create_order">Create order</string>
+    <string name="device_not_supported">This device is not supported.</string>
 </resources>
