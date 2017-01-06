@@ -13,4 +13,5 @@
         tools:context=".MapsActivity"
         android:name="com.google.android.gms.maps.SupportMapFragment" />
 
+    <include layout="@layout/order_views_client"/>
 </RelativeLayout>

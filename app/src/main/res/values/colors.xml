@@ -6,8 +6,9 @@
     <color name="colorChooseRoleDark">#007A7A</color>
     <color name="colorChooseRoleDarkes">#005c5c</color>
     <color name="colorChooseRoleLight">#58b3e7</color>
-    <color name="colorSignInCardBackgrounf">#3c444a</color>
+    <color name="colorSignInCardBackgrounf">#4d6e87</color>
     <color name="colorSignInTextViewColor">#97999e</color>
     <color name="colorSignInBackground">#2e373d</color>
     <color name="colorWhite">#ffffff</color>
+    <color name="colorOrderStatusBackground">#9900ffff</color>
 </resources>
