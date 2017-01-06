@@ -8,7 +8,7 @@
         android:id="@+id/order_views_client_order_status_ed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorSignInCardBackgrounf"
+        android:background="@color/colorOrderStatusBackground"
         android:gravity="center"
         android:padding="12dp"
         android:text="Status"
@@ -75,6 +75,7 @@
                 />
 
             <com.kerer.taxiapp.custom_views.RobotoRegularTextView
+                android:id="@+id/order_views_client_order_price_tv"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -90,6 +91,7 @@
                 />
 
             <com.kerer.taxiapp.custom_views.RobotoRegularTextView
+                android:id="@+id/order_views_client_order_length_tv"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -104,6 +106,7 @@
                 android:text="@string/time" />
 
             <com.kerer.taxiapp.custom_views.RobotoRegularTextView
+                android:id="@+id/order_views_client_order_time_tv"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

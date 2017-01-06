@@ -10,5 +10,5 @@
     <color name="colorSignInTextViewColor">#97999e</color>
     <color name="colorSignInBackground">#2e373d</color>
     <color name="colorWhite">#ffffff</color>
-    <color name="colorOrderStatusBackground">#9900ffff</color>
+    <color name="colorOrderStatusBackground">#aa4d6e87</color>
 </resources>

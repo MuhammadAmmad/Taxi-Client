@@ -25,4 +25,5 @@
     <string name="price">Price: </string>
     <string name="length">Length: </string>
     <string name="time">Time:</string>
+    <string name="cannot_find_address">We cannot find this address, try enother</string>
 </resources>

@@ -60,7 +60,8 @@ public class ClientSignInFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         if (mUser != null){
-            mAuth.signOut();
+            startActivity(ClientCreateOrderActivity.createIntent(getActivity()));
+            getActivity().finish();
         }
     }
 

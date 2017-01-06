@@ -2,6 +2,8 @@ package com.kerer.taxiapp.fragment;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -23,7 +27,17 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.kerer.taxiapp.R;
+
+import java.io.IOException;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  *
@@ -46,6 +60,26 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
 
     private LocationRequest mLocationRequest;
 
+    Geocoder mGeocoder;
+
+    //Marker in user location
+    private Marker mUserMarker;
+    private Marker mMarkerFrom;
+    private Marker mMarkerTo;
+
+    private BitmapDescriptor mUserMarkerIcon;
+
+    @BindView(R.id.order_views_client_route_from)
+    EditText mRouteFromEd;
+    @BindView(R.id.order_views_client_route_to)
+    EditText mRouteToEd;
+    @BindView(R.id.order_views_client_order_price_tv)
+    TextView mOrderPriceTv;
+    @BindView(R.id.order_views_client_order_time_tv)
+    TextView mOrderTimeTv;
+    @BindView(R.id.order_views_client_order_length_tv)
+    TextView mOrderLengthTv;
+
     public static final ClientCreateOrderFragment newInstance() {
         return new ClientCreateOrderFragment();
     }
@@ -56,6 +90,9 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
         if (checkPlayServices()) {
             buildGoogleApiClient();
             createLocationRequest();
+
+            mGeocoder = new Geocoder(getActivity());
+
         }
     }
 
@@ -64,11 +101,62 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_client_create_order, container, false);
 
+        ButterKnife.bind(this, v);
+
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.fragment_client_create_order_map);
         mapFragment.getMapAsync(this);
 
+        initListeners();
+
         return v;
+    }
+
+    private void initListeners(){
+        View.OnFocusChangeListener addressFocusChangeListener = new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus){
+                   tryDrowMarkerOnMap(v);
+                }
+            }
+        };
+
+        mRouteFromEd.setOnFocusChangeListener(addressFocusChangeListener);
+        mRouteToEd.setOnFocusChangeListener(addressFocusChangeListener);
+    }
+
+    /**
+     * method get addres from edittext and get location with geocoder
+     * @param v - view with address
+     */
+    private void tryDrowMarkerOnMap(View v){
+        Log.d(TAG, "try");
+        EditText ed = (EditText) v;
+        try {
+            List<Address> addresses = mGeocoder.getFromLocationName(ed.getText().toString(), 1);
+            if (!addresses.isEmpty()){
+                //check from what view call this method
+                if (v.getId() == R.id.order_views_client_route_from){
+                    Address address = addresses.get(0);
+                    if (mMarkerFrom != null){
+                        mMarkerFrom.remove();
+                    }
+                    mMarkerFrom = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(address.getLatitude(), address.getLongitude())));
+                }else {
+                    Address address = addresses.get(0);
+                    if (mMarkerTo != null){
+                        mMarkerTo.remove();
+                    }
+                    mMarkerTo = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(address.getLatitude(), address.getLongitude())));
+                }
+            }else {
+                ed.setError(getString(R.string.cannot_find_address));
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -157,9 +245,10 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
 
     @Override
     public void onLocationChanged(Location location) {
-        Toast.makeText(getActivity(), "Location changed!",
-                Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "Location changed");
+        //adding user location marker on map
+       mUserMarker = mGoogleMap.addMarker(new MarkerOptions()
+                       /*.icon(mUserMarkerIcon)*/
+                       .position(new LatLng(location.getLatitude(), location.getLongitude())));
     }
 
     //FRAGMENT LIFE CYCLE
