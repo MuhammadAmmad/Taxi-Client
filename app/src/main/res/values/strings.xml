@@ -27,4 +27,6 @@
     <string name="time">Time:</string>
     <string name="cannot_find_address">We cannot find this address, try enother</string>
     <string name="fields_must_filled">Fields must be filled</string>
+    <string name="no_interner">No internet connection</string>
+    <string name="your_location">Your location</string>
 </resources>

@@ -2,7 +2,6 @@ package com.kerer.taxiapp.fragment;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,16 +26,22 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.maps.android.PolyUtil;
-import com.kerer.taxiapp.GoogleDirectionsResultStatus;
 import com.kerer.taxiapp.R;
+import com.kerer.taxiapp.interfaces.FirebaseDatabaseReferences;
+import com.kerer.taxiapp.interfaces.GoogleDirectionsResultStatus;
+import com.kerer.taxiapp.interfaces.OrderStatuses;
+import com.kerer.taxiapp.model.Order;
 import com.kerer.taxiapp.model.RouteResponse;
 import com.kerer.taxiapp.rest.GoogleDirectionsApiService;
 
@@ -53,7 +58,8 @@ import retrofit2.Response;
  */
 
 public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCallback,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleDirectionsResultStatus {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        LocationListener, GoogleDirectionsResultStatus, FirebaseDatabaseReferences, OrderStatuses {
 
     private static final String TAG = "ClientCreateOrderFragment";
 
@@ -69,16 +75,13 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
 
     private LocationRequest mLocationRequest;
 
-    Geocoder mGeocoder;
-
-    //Marker in user location
+    //user location marker
     private Marker mUserMarker;
 
-    //users route markers
-    private Marker mMarkerFrom;
-    private Marker mMarkerTo;
-
-    private BitmapDescriptor mUserMarkerIcon;
+    //Firebase
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+    private DatabaseReference mDatabase;
 
     @BindView(R.id.order_views_client_order_status_ed)
     TextView mOrderStatusTv;
@@ -106,8 +109,13 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
             buildGoogleApiClient();
             createLocationRequest();
 
-            mGeocoder = new Geocoder(getActivity());
-
+            //init Firebase
+            mAuth = FirebaseAuth.getInstance();
+            mUser = mAuth.getCurrentUser();
+            if (mUser == null){
+                getActivity().finish();
+            }
+            mDatabase = FirebaseDatabase.getInstance().getReference();
         }
     }
 
@@ -130,23 +138,22 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
     private void initListeners() {
         //Route EditText`s losteners
 
-
         //fab listener
         mCreateOrderFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String origin = mRouteFromEd.getText().toString();
                 String destination = mRouteToEd.getText().toString();
-                if (origin.length() > 0  && destination.length() > 0) {
+                if (origin.length() > 0 && destination.length() > 0) {
                     GoogleDirectionsApiService service = GoogleDirectionsApiService.retrofit.create(GoogleDirectionsApiService.class);
                     Call<RouteResponse> getDirectionInfo = service.getDirection(origin, destination, getString(R.string.google_maps_key));
                     getDirectionInfo.enqueue(new Callback<RouteResponse>() {
                         @Override
                         public void onResponse(Call<RouteResponse> call, Response<RouteResponse> response) {
                             Log.d(TAG, new Gson().toJson(response.body()));
-                            if (response.body().getStatus().equals(OK)){
+                            if (response.body().getStatus().equals(OK)) {
                                 drawPolyline(response.body());
-                            }else {
+                            } else {
                                 Toast.makeText(getActivity(), getString(R.string.something_goes_wrong), Toast.LENGTH_SHORT)
                                         .show();
                             }
@@ -154,10 +161,11 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
 
                         @Override
                         public void onFailure(Call<RouteResponse> call, Throwable t) {
-                            Log.d(TAG, "onFailure");
+                            Toast.makeText(getActivity(), getString(R.string.no_interner), Toast.LENGTH_SHORT)
+                                    .show();
                         }
                     });
-                }else {
+                } else {
                     Toast.makeText(getActivity(), getString(R.string.fields_must_filled), Toast.LENGTH_SHORT)
                             .show();
                 }
@@ -171,10 +179,11 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
      * @param response model from google directions API, curently have just polyline options
      */
     private void drawPolyline(RouteResponse response) {
+        mGoogleMap.clear();
 
         PolylineOptions line = new PolylineOptions();
         List<LatLng> mPoints = PolyUtil.decode(response.getPoints());
-        line.width(10f).color(R.color.colorAccent);
+        line.width(10f).color(R.color.colorOrderStatusBackground);
         LatLngBounds.Builder latLngBuilder = new LatLngBounds.Builder();
         for (int i = 0; i < mPoints.size(); i++) {
             if (i == 0) {
@@ -189,12 +198,35 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
             line.add(mPoints.get(i));
             latLngBuilder.include(mPoints.get(i));
         }
+
+
         mGoogleMap.addPolyline(line);
 
+        createOrder();
     }
 
+    /**
+     * method insert to DB new order
+     */
+    private void createOrder(){
 
+        mDatabase.child(ORDERS)
+                .push()
+                .setValue(bindOrder());
+    }
 
+    /**
+     * @return order model for Firebase
+     */
+    private Order bindOrder(){
+        Order order = new Order();
+        order.setmClientUid(mUser.getUid());
+        order.setmOrigin(mRouteFromEd.getText().toString());
+        order.setmDestination(mRouteToEd.getText().toString());
+        order.setmStatus(STATUS_CREATED);
+
+        return order;
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -261,8 +293,10 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
      * Stopping location updates
      */
     protected void stopLocationUpdates() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(
-                mGoogleApiClient, this);
+        if (mGoogleApiClient.isConnected()){
+            LocationServices.FusedLocationApi.removeLocationUpdates(
+                    mGoogleApiClient, this);
+        }
     }
 
     //GOOGLE API CALLBACKS
@@ -285,7 +319,7 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
     public void onLocationChanged(Location location) {
         //adding user location marker on map
         mUserMarker = mGoogleMap.addMarker(new MarkerOptions()
-                       /*.icon(mUserMarkerIcon)*/
+                .title(getString(R.string.your_location))
                 .position(new LatLng(location.getLatitude(), location.getLongitude())));
     }
 

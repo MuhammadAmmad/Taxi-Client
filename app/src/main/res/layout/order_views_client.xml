@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <com.kerer.taxiapp.custom_views.RobotoRegularTextView
@@ -21,7 +22,9 @@
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
         android:layout_above="@+id/order_views_client_order_details_card"
-        android:src="@drawable/ic_fab_create_order" />
+        android:src="@drawable/ic_fab_create_order"
+        app:layout_anchor="@id/order_views_client_order_details_card"
+        app:layout_anchorGravity="top|right" />
 
     <LinearLayout
         android:id="@+id/order_views_client_order_details_card"
@@ -30,7 +33,7 @@
         android:background="@color/colorSignInCardBackgrounf"
         android:orientation="vertical"
         android:padding="16dp"
-        android:layout_alignParentBottom="true">
+        android:layout_gravity="bottom">
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -118,4 +121,4 @@
         </LinearLayout>
 
     </LinearLayout>
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>
