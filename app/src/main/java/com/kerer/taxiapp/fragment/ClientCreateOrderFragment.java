@@ -2,7 +2,6 @@ package com.kerer.taxiapp.fragment;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
@@ -36,12 +35,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.google.maps.android.PolyUtil;
-import com.kerer.taxiapp.GoogleDirectionsUrlParams;
+import com.kerer.taxiapp.GoogleDirectionsResultStatus;
 import com.kerer.taxiapp.R;
 import com.kerer.taxiapp.model.RouteResponse;
 import com.kerer.taxiapp.rest.GoogleDirectionsApiService;
 
-import java.io.IOException;
 import java.util.List;
 
 import butterknife.BindView;
@@ -55,7 +53,7 @@ import retrofit2.Response;
  */
 
 public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCallback,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleDirectionsUrlParams {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleDirectionsResultStatus {
 
     private static final String TAG = "ClientCreateOrderFragment";
 
@@ -79,9 +77,6 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
     //users route markers
     private Marker mMarkerFrom;
     private Marker mMarkerTo;
-
-    private Address mFromAddress;
-    private Address mToAddress;
 
     private BitmapDescriptor mUserMarkerIcon;
 
@@ -134,39 +129,38 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
 
     private void initListeners() {
         //Route EditText`s losteners
-        View.OnFocusChangeListener addressFocusChangeListener = new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    tryDrowMarkerOnMap(v);
-                }
-            }
-        };
 
-        mRouteFromEd.setOnFocusChangeListener(addressFocusChangeListener);
-        mRouteToEd.setOnFocusChangeListener(addressFocusChangeListener);
 
         //fab listener
         mCreateOrderFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mFromAddress != null && mToAddress != null) {
+                String origin = mRouteFromEd.getText().toString();
+                String destination = mRouteToEd.getText().toString();
+                if (origin.length() > 0  && destination.length() > 0) {
+                    GoogleDirectionsApiService service = GoogleDirectionsApiService.retrofit.create(GoogleDirectionsApiService.class);
+                    Call<RouteResponse> getDirectionInfo = service.getDirection(origin, destination, getString(R.string.google_maps_key));
+                    getDirectionInfo.enqueue(new Callback<RouteResponse>() {
+                        @Override
+                        public void onResponse(Call<RouteResponse> call, Response<RouteResponse> response) {
+                            Log.d(TAG, new Gson().toJson(response.body()));
+                            if (response.body().getStatus().equals(OK)){
+                                drawPolyline(response.body());
+                            }else {
+                                Toast.makeText(getActivity(), getString(R.string.something_goes_wrong), Toast.LENGTH_SHORT)
+                                        .show();
+                            }
+                        }
 
+                        @Override
+                        public void onFailure(Call<RouteResponse> call, Throwable t) {
+                            Log.d(TAG, "onFailure");
+                        }
+                    });
+                }else {
+                    Toast.makeText(getActivity(), getString(R.string.fields_must_filled), Toast.LENGTH_SHORT)
+                            .show();
                 }
-                GoogleDirectionsApiService service = GoogleDirectionsApiService.retrofit.create(GoogleDirectionsApiService.class);
-                Call<RouteResponse> getDirectionInfo = service.getDirection("Чернівці головна 255", "Чернівці головна 25", getString(R.string.google_maps_key));
-                getDirectionInfo.enqueue(new Callback<RouteResponse>() {
-                    @Override
-                    public void onResponse(Call<RouteResponse> call, Response<RouteResponse> response) {
-                        Log.d(TAG, new Gson().toJson(response.body()));
-                        drawPolyline(response.body());
-                    }
-
-                    @Override
-                    public void onFailure(Call<RouteResponse> call, Throwable t) {
-                        Log.d(TAG, "onFailure");
-                    }
-                });
             }
         });
     }
@@ -199,40 +193,8 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
 
     }
 
-    /**
-     * method get addres from edittext and get location with geocoder
-     *
-     * @param v - view with address
-     */
-    private void tryDrowMarkerOnMap(View v) {
-        Log.d(TAG, "try");
-        EditText ed = (EditText) v;
-        try {
-            List<Address> addresses = mGeocoder.getFromLocationName(ed.getText().toString(), 1);
-            if (!addresses.isEmpty()) {
-                //check from what view call this method
-                if (v.getId() == R.id.order_views_client_route_from) {
-                    mFromAddress = addresses.get(0);
-                    if (mMarkerFrom != null) {
-                        mMarkerFrom.remove();
-                    }
-                    mMarkerFrom = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(mFromAddress.getLatitude(), mFromAddress.getLongitude())));
 
-                } else {
-                    mToAddress = addresses.get(0);
-                    if (mMarkerTo != null) {
-                        mMarkerTo.remove();
-                    }
-                    mMarkerTo = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(mToAddress.getLatitude(), mToAddress.getLongitude())));
-                }
-            } else {
-                ed.setError(getString(R.string.cannot_find_address));
-            }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {

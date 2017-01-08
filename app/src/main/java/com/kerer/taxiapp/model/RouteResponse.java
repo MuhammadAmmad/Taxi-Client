@@ -8,9 +8,14 @@ import java.util.List;
 
 public class RouteResponse {
     public List<Route> routes;
+    public String status;
 
     public String getPoints() {
         return this.routes.get(0).overview_polyline.points;
+    }
+
+    public String getStatus(){
+        return status;
     }
 
     class Route {

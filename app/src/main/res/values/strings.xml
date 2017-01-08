@@ -26,4 +26,5 @@
     <string name="length">Length: </string>
     <string name="time">Time:</string>
     <string name="cannot_find_address">We cannot find this address, try enother</string>
+    <string name="fields_must_filled">Fields must be filled</string>
 </resources>
