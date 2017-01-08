@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.kerer.taxiapp.custom_views.RobotoRegularEditText
+    <com.kerer.taxiapp.custom_views.RobotoRegularTextView
         android:id="@+id/order_views_client_order_status_ed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,7 +43,8 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/from"
                 android:textColor="@android:color/white"
-                android:textColorHint="@android:color/white" />
+                android:textColorHint="@android:color/white"
+                android:inputType="text"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -57,7 +58,8 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/to"
                 android:textColor="@android:color/white"
-                android:textColorHint="@android:color/white" />
+                android:textColorHint="@android:color/white"
+                android:inputType="text"/>
         </android.support.design.widget.TextInputLayout>
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
