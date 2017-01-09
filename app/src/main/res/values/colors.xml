@@ -18,4 +18,9 @@
     <color name="colorOrderAccent">#2196F3</color>
     <color name="colorOrderTextViewColor">#5c5e61</color>
     <color name="colorWhitetransparent">#99ffffff</color>
+
+    <color name="colorOrderItemDarkTextView">#3c4f5e</color>
+    <color name="colorOrderItemLightTextView">#6c7b8a</color>
+    <color name="colorOrderItemBottomView">#edeff0</color>
+
 </resources>

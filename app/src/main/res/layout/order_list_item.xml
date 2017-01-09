@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/order_list_item_card_padding"
+    android:paddingTop="@dimen/order_list_item_card_padding">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.9"
+        android:orientation="vertical">
+
+        <com.kerer.taxiapp.custom_views.RobotoRegularTextView
+            android:id="@+id/order_list_item_origin"
+            style="@style/OrderListItemTextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Holovna 22 Chernivtsi" />
+
+        <com.kerer.taxiapp.custom_views.RobotoRegularTextView
+            android:id="@+id/order_list_item_destination"
+            style="@style/OrderListItemTextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Holovna 22 Chernivtsi" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.kerer.taxiapp.custom_views.RobotoRegularTextView
+                android:id="@+id/order_list_item_payment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/card_list_item_payment_text_size"
+                android:text="20 uah"
+                android:textColor="@color/colorOrderItemLightTextView"
+                android:textSize="12dp" />
+
+            <com.kerer.taxiapp.custom_views.RobotoRegularTextView
+                android:id="@+id/order_list_item_length"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/card_list_item_payment_text_size"
+                android:text="2.5 km"
+                android:textColor="@color/colorOrderItemLightTextView"
+                android:textSize="12dp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/colorOrderItemBottomView" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.1"
+        android:orientation="vertical"
+        android:weightSum="3"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_view_order"
+            />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_hide_order"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_get_order"/>
+    </LinearLayout>
+
+</LinearLayout>

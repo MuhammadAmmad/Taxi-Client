@@ -46,9 +46,16 @@
         <item name="android:inputType">text</item>
     </style>
 
+    <style name="OrderListItemTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/colorOrderItemDarkTextView</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:padding">10dp</item>
+    </style>
+
     <style name="MyTvStyle" parent="android:Widget.TextView">
         <item name="android:textColor">@color/colorOrderTextViewColor</item>
         <item name="android:textSize">12dp</item>
+
     </style>
 
 </resources>
