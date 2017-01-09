@@ -1,5 +1,7 @@
 package com.kerer.taxiapp.model;
 
+import java.util.HashMap;
+
 /**
  * Created by ivan on 03.01.17.
  */
@@ -10,7 +12,9 @@ public class Client {
     private String mSurname;
     private String mPhone;
     private String uId;
+    private HashMap<String, Order> mOrders;
     private boolean isBanned;
+
 
     public Client() {
     }
@@ -53,5 +57,13 @@ public class Client {
 
     public void setBanned(boolean banned) {
         isBanned = banned;
+    }
+
+    public HashMap<String, Order> getmOrders() {
+        return mOrders;
+    }
+
+    public void setmOrders(HashMap<String, Order> mOrders) {
+        this.mOrders = mOrders;
     }
 }

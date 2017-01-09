@@ -33,8 +33,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.maps.android.PolyUtil;
 import com.kerer.taxiapp.R;
@@ -45,7 +48,9 @@ import com.kerer.taxiapp.model.Order;
 import com.kerer.taxiapp.model.RouteResponse;
 import com.kerer.taxiapp.rest.GoogleDirectionsApiService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -112,11 +117,72 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
             //init Firebase
             mAuth = FirebaseAuth.getInstance();
             mUser = mAuth.getCurrentUser();
-            if (mUser == null){
+            if (mUser == null) {
                 getActivity().finish();
             }
             mDatabase = FirebaseDatabase.getInstance().getReference();
+
+            //checking if not finished order is in user
+
+            mDatabase
+                    .child(CLIENTS)
+                    .child(mUser.getUid())
+                    .child(ACTIVE_ORDERS)
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+                                Order order = dataSnapshot1.getValue(Order.class);
+
+                                switch (order.getmStatus()){
+                                    case STATUS_CREATED:
+                                        break;
+                                    case STATUS_GETED:
+                                        break;
+                                    case STATUS_BY_ORIGIN:
+                                        break;
+                                    case STATUS_BY_DESTINATION:
+                                        break;
+                                    case STATUS_PAYED:
+                                        mDatabase.child(CLIENTS)
+                                                .child(mUser.getUid())
+                                                .child(ACTIVE_ORDERS)
+                                                .child(dataSnapshot1.getKey())
+                                                .removeValue();
+
+                                        mDatabase.child(CLIENTS)
+                                                .child(mUser.getUid())
+                                                .child(ORDERS)
+                                                .push()
+                                                .setValue(order);
+                                        break;
+                                    case STATUS_CANCELED:
+                                        Toast.makeText(getActivity(), "YOURS ORDER VAS CANCELED", Toast.LENGTH_SHORT)
+                                                .show();
+                                        mDatabase.child(CLIENTS)
+                                                .child(mUser.getUid())
+                                                .child(ACTIVE_ORDERS)
+                                                .child(dataSnapshot1.getKey())
+                                                .removeValue();
+
+                                        mDatabase.child(CLIENTS)
+                                                .child(mUser.getUid())
+                                                .child(ORDERS)
+                                                .push()
+                                                .setValue(order);
+                                        break;
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
         }
+
     }
 
     @Nullable
@@ -208,17 +274,23 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
     /**
      * method insert to DB new order
      */
-    private void createOrder(){
+    private void createOrder() {
+        String key = mDatabase.child(ORDERS).push().getKey();
+        Order order = bindOrder();
+        Map<String, Object> orderValues = order.toMap();
 
-        mDatabase.child(ORDERS)
-                .push()
-                .setValue(bindOrder());
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/" + ORDERS + "/" + key, orderValues);
+        childUpdates.put("/" + CLIENTS + "/" + mUser.getUid() + "/" + ACTIVE_ORDERS + "/" + key, orderValues);
+
+        //set order to client and to active orders
+        mDatabase.updateChildren(childUpdates);
     }
 
     /**
      * @return order model for Firebase
      */
-    private Order bindOrder(){
+    private Order bindOrder() {
         Order order = new Order();
         order.setmClientUid(mUser.getUid());
         order.setmOrigin(mRouteFromEd.getText().toString());
@@ -293,7 +365,7 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
      * Stopping location updates
      */
     protected void stopLocationUpdates() {
-        if (mGoogleApiClient.isConnected()){
+        if (mGoogleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(
                     mGoogleApiClient, this);
         }
