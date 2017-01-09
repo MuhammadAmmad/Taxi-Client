@@ -126,6 +126,7 @@ public class Order {
         result.put("mOrigin", mOrigin);
         result.put("mDestination", mDestination);
         result.put("mStatus", mStatus);
+        result.put("mKey", mKey);
 
         return result;
     }

@@ -350,6 +350,7 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
     private void createOrder() {
         String key = mDatabase.child(ORDERS).push().getKey();
         Order order = bindOrder();
+        order.setmKey(key);
         Map<String, Object> orderValues = order.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
