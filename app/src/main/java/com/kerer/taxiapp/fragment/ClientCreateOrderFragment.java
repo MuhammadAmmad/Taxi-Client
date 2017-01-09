@@ -80,13 +80,15 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
 
     private LocationRequest mLocationRequest;
 
-    //user location marker
-    private Marker mUserMarker;
-
     //Firebase
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private DatabaseReference mDatabase;
+
+    //route dirrection
+    PolylineOptions line;
+    //user location marker
+    private Marker mUserMarker;
 
     @BindView(R.id.order_views_client_order_status_ed)
     TextView mOrderStatusTv;
@@ -124,63 +126,7 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
 
             //checking if not finished order is in user
 
-            mDatabase
-                    .child(CLIENTS)
-                    .child(mUser.getUid())
-                    .child(ACTIVE_ORDERS)
-                    .addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
 
-                                Order order = dataSnapshot1.getValue(Order.class);
-
-                                switch (order.getmStatus()){
-                                    case STATUS_CREATED:
-                                        break;
-                                    case STATUS_GETED:
-                                        break;
-                                    case STATUS_BY_ORIGIN:
-                                        break;
-                                    case STATUS_BY_DESTINATION:
-                                        break;
-                                    case STATUS_PAYED:
-                                        mDatabase.child(CLIENTS)
-                                                .child(mUser.getUid())
-                                                .child(ACTIVE_ORDERS)
-                                                .child(dataSnapshot1.getKey())
-                                                .removeValue();
-
-                                        mDatabase.child(CLIENTS)
-                                                .child(mUser.getUid())
-                                                .child(ORDERS)
-                                                .push()
-                                                .setValue(order);
-                                        break;
-                                    case STATUS_CANCELED:
-                                        Toast.makeText(getActivity(), "YOURS ORDER VAS CANCELED", Toast.LENGTH_SHORT)
-                                                .show();
-                                        mDatabase.child(CLIENTS)
-                                                .child(mUser.getUid())
-                                                .child(ACTIVE_ORDERS)
-                                                .child(dataSnapshot1.getKey())
-                                                .removeValue();
-
-                                        mDatabase.child(CLIENTS)
-                                                .child(mUser.getUid())
-                                                .child(ORDERS)
-                                                .push()
-                                                .setValue(order);
-                                        break;
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
         }
 
     }
@@ -202,41 +148,125 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
     }
 
     private void initListeners() {
-        //Route EditText`s losteners
 
         //fab listener
         mCreateOrderFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String origin = mRouteFromEd.getText().toString();
-                String destination = mRouteToEd.getText().toString();
-                if (origin.length() > 0 && destination.length() > 0) {
-                    GoogleDirectionsApiService service = GoogleDirectionsApiService.retrofit.create(GoogleDirectionsApiService.class);
-                    Call<RouteResponse> getDirectionInfo = service.getDirection(origin, destination, getString(R.string.google_maps_key));
-                    getDirectionInfo.enqueue(new Callback<RouteResponse>() {
-                        @Override
-                        public void onResponse(Call<RouteResponse> call, Response<RouteResponse> response) {
-                            Log.d(TAG, new Gson().toJson(response.body()));
-                            if (response.body().getStatus().equals(OK)) {
-                                drawPolyline(response.body());
-                            } else {
-                                Toast.makeText(getActivity(), getString(R.string.something_goes_wrong), Toast.LENGTH_SHORT)
-                                        .show();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<RouteResponse> call, Throwable t) {
-                            Toast.makeText(getActivity(), getString(R.string.no_interner), Toast.LENGTH_SHORT)
-                                    .show();
-                        }
-                    });
-                } else {
-                    Toast.makeText(getActivity(), getString(R.string.fields_must_filled), Toast.LENGTH_SHORT)
-                            .show();
-                }
+                //drowing route from inputed addreses and creating order
+                callGoogleDirectionsApi();
             }
         });
+
+        //Active order listener
+        mDatabase
+                .child(CLIENTS)
+                .child(mUser.getUid())
+                .child(ACTIVE_ORDERS)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+                            Order order = dataSnapshot1.getValue(Order.class);
+
+                            switch (order.getmStatus()) {
+                                case STATUS_CREATED:
+                                    setOrderInfo(order);
+                                    mOrderStatusTv.setText(R.string.search_car);
+                                    break;
+                                case STATUS_GETED:
+                                    setOrderInfo(order);
+                                    mOrderStatusTv.setText(R.string.order_geted);
+                                    break;
+                                case STATUS_BY_ORIGIN:
+                                    setOrderInfo(order);
+                                    mOrderStatusTv.setText(R.string.driver_by_origin);
+                                    break;
+                                case STATUS_BY_DESTINATION:
+                                    setOrderInfo(order);
+                                    mOrderStatusTv.setText(R.string.you_need_pay);
+                                    break;
+                                case STATUS_PAYED:
+                                    Toast.makeText(getActivity(), "Thanks for using Taxi app", Toast.LENGTH_SHORT)
+                                            .show();
+                                    replaceOrder(order, dataSnapshot1.getKey());
+                                    break;
+                                case STATUS_CANCELED:
+                                    Toast.makeText(getActivity(), "YOURS ORDER VAS CANCELED", Toast.LENGTH_SHORT)
+                                            .show();
+                                    replaceOrder(order, dataSnapshot1.getKey());
+                                    break;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
+    private void replaceOrder(Order order, String key) {
+        mDatabase.child(CLIENTS)
+                .child(mUser.getUid())
+                .child(ACTIVE_ORDERS)
+                .child(key)
+                .removeValue();
+
+        mDatabase.child(CLIENTS)
+                .child(mUser.getUid())
+                .child(ORDERS)
+                .push()
+                .setValue(order);
+    }
+
+    /**
+     * setting order info when order status is change
+     *
+     * @param order
+     */
+    private void setOrderInfo(Order order) {
+        mRouteFromEd.setText(order.getmOrigin());
+        mRouteFromEd.setText(order.getmOrigin());
+        if (line == null) {
+            callGoogleDirectionsApi();
+        }
+    }
+
+    /**
+     * geting direction info from google directions API
+     */
+    private void callGoogleDirectionsApi() {
+        String origin = mRouteFromEd.getText().toString();
+        String destination = mRouteToEd.getText().toString();
+        if (origin.length() > 0 && destination.length() > 0) {
+            GoogleDirectionsApiService service = GoogleDirectionsApiService.retrofit.create(GoogleDirectionsApiService.class);
+            Call<RouteResponse> getDirectionInfo = service.getDirection(origin, destination, getString(R.string.google_maps_key));
+            getDirectionInfo.enqueue(new Callback<RouteResponse>() {
+                @Override
+                public void onResponse(Call<RouteResponse> call, Response<RouteResponse> response) {
+                    Log.d(TAG, new Gson().toJson(response.body()));
+                    if (response.body().getStatus().equals(OK)) {
+                        drawPolyline(response.body());
+                        createOrder();
+                    } else {
+                        Toast.makeText(getActivity(), getString(R.string.something_goes_wrong), Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<RouteResponse> call, Throwable t) {
+                    Toast.makeText(getActivity(), getString(R.string.no_interner), Toast.LENGTH_SHORT)
+                            .show();
+                }
+            });
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.fields_must_filled), Toast.LENGTH_SHORT)
+                    .show();
+        }
     }
 
     /**
@@ -247,7 +277,7 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
     private void drawPolyline(RouteResponse response) {
         mGoogleMap.clear();
 
-        PolylineOptions line = new PolylineOptions();
+        line = new PolylineOptions();
         List<LatLng> mPoints = PolyUtil.decode(response.getPoints());
         line.width(10f).color(R.color.colorOrderStatusBackground);
         LatLngBounds.Builder latLngBuilder = new LatLngBounds.Builder();
@@ -267,9 +297,8 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
 
 
         mGoogleMap.addPolyline(line);
-
-        createOrder();
     }
+
 
     /**
      * method insert to DB new order

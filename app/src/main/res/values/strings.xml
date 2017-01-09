@@ -29,4 +29,8 @@
     <string name="fields_must_filled">Fields must be filled</string>
     <string name="no_interner">No internet connection</string>
     <string name="your_location">Your location</string>
+    <string name="search_car">Searching car</string>
+    <string name="order_geted">Order geted. Waiting for a driver</string>
+    <string name="driver_by_origin">Driver by origin, pleasant journey</string>
+    <string name="you_need_pay">You need to pay</string>
 </resources>
