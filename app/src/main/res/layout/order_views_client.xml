@@ -12,14 +12,13 @@
         android:background="@color/colorOrderStatusBackground"
         android:gravity="center"
         android:padding="12dp"
-        android:text="Status"
+        android:text="@string/create_order"
         android:textColor="@android:color/white" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/order_views_client_create_order_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_margin="16dp"
         android:layout_above="@+id/order_views_client_order_details_card"
         android:src="@drawable/ic_fab_create_order"

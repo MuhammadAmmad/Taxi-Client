@@ -23,6 +23,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -48,6 +50,7 @@ import com.kerer.taxiapp.model.Order;
 import com.kerer.taxiapp.model.RouteResponse;
 import com.kerer.taxiapp.rest.GoogleDirectionsApiService;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,10 +126,6 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
                 getActivity().finish();
             }
             mDatabase = FirebaseDatabase.getInstance().getReference();
-
-            //checking if not finished order is in user
-
-
         }
 
     }
@@ -154,7 +153,9 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
             @Override
             public void onClick(View v) {
                 //drowing route from inputed addreses and creating order
-                callGoogleDirectionsApi();
+                String origin = mRouteFromEd.getText().toString();
+                String destination = mRouteToEd.getText().toString();
+                callGoogleDirectionsApi(origin, destination);
             }
         });
 
@@ -188,12 +189,12 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
                                     mOrderStatusTv.setText(R.string.you_need_pay);
                                     break;
                                 case STATUS_PAYED:
-                                    Toast.makeText(getActivity(), "Thanks for using Taxi app", Toast.LENGTH_SHORT)
+                                    Toast.makeText(getActivity(), R.string.thanks_for_using_taxi_app, Toast.LENGTH_SHORT)
                                             .show();
                                     replaceOrder(order, dataSnapshot1.getKey());
                                     break;
                                 case STATUS_CANCELED:
-                                    Toast.makeText(getActivity(), "YOURS ORDER VAS CANCELED", Toast.LENGTH_SHORT)
+                                    Toast.makeText(getActivity(), R.string.order_was_canceled, Toast.LENGTH_SHORT)
                                             .show();
                                     replaceOrder(order, dataSnapshot1.getKey());
                                     break;
@@ -208,6 +209,12 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
                 });
     }
 
+    /**
+     * replacing order from active to not active
+     *
+     * @param order - order what need to replace
+     * @param key   - orders key
+     */
     private void replaceOrder(Order order, String key) {
         mDatabase.child(CLIENTS)
                 .child(mUser.getUid())
@@ -220,6 +227,9 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
                 .child(ORDERS)
                 .push()
                 .setValue(order);
+
+        mOrderStatusTv.setText(getString(R.string.create_order));
+        mGoogleMap.clear();
     }
 
     /**
@@ -229,18 +239,16 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
      */
     private void setOrderInfo(Order order) {
         mRouteFromEd.setText(order.getmOrigin());
-        mRouteFromEd.setText(order.getmOrigin());
+        mRouteToEd.setText(order.getmDestination());
         if (line == null) {
-            callGoogleDirectionsApi();
+            callGoogleDirectionsApi(order.getmOrigin(), order.getmDestination());
         }
     }
 
     /**
      * geting direction info from google directions API
      */
-    private void callGoogleDirectionsApi() {
-        String origin = mRouteFromEd.getText().toString();
-        String destination = mRouteToEd.getText().toString();
+    private void callGoogleDirectionsApi(String origin, String destination) {
         if (origin.length() > 0 && destination.length() > 0) {
             GoogleDirectionsApiService service = GoogleDirectionsApiService.retrofit.create(GoogleDirectionsApiService.class);
             Call<RouteResponse> getDirectionInfo = service.getDirection(origin, destination, getString(R.string.google_maps_key));
@@ -276,6 +284,8 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
      */
     private void drawPolyline(RouteResponse response) {
         mGoogleMap.clear();
+        //for zooming map with two markers
+        List<Marker> markers = new ArrayList<>();
 
         line = new PolylineOptions();
         List<LatLng> mPoints = PolyUtil.decode(response.getPoints());
@@ -285,18 +295,34 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
             if (i == 0) {
                 MarkerOptions startMarkerOptions = new MarkerOptions()
                         .position(mPoints.get(i));
-                mGoogleMap.addMarker(startMarkerOptions);
+
+                markers.add(mGoogleMap.addMarker(startMarkerOptions));
             } else if (i == mPoints.size() - 1) {
                 MarkerOptions endMarkerOptions = new MarkerOptions()
                         .position(mPoints.get(i));
-                mGoogleMap.addMarker(endMarkerOptions);
+                markers.add(mGoogleMap.addMarker(endMarkerOptions));
             }
             line.add(mPoints.get(i));
             latLngBuilder.include(mPoints.get(i));
         }
 
-
         mGoogleMap.addPolyline(line);
+        zoomMapByMarkers(markers);
+    }
+
+    /**
+     * zooming map with two markers
+     * @param markers - markers with what map will zooming
+     */
+    private void zoomMapByMarkers(List<Marker> markers){
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        for (Marker marker : markers){
+            builder.include(marker.getPosition());
+        }
+        LatLngBounds bounds = builder.build();
+        int padding = 40; // offset from edges of the map in pixels
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+        mGoogleMap.animateCamera(cameraUpdate);
     }
 
 

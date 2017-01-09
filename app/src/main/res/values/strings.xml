@@ -33,4 +33,6 @@
     <string name="order_geted">Order geted. Waiting for a driver</string>
     <string name="driver_by_origin">Driver by origin, pleasant journey</string>
     <string name="you_need_pay">You need to pay</string>
+    <string name="thanks_for_using_taxi_app">Thanks for using Taxi app</string>
+    <string name="order_was_canceled">Your order was canceled</string>
 </resources>
