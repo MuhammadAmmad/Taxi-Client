@@ -21,6 +21,6 @@
 
     <color name="colorOrderItemDarkTextView">#3c4f5e</color>
     <color name="colorOrderItemLightTextView">#6c7b8a</color>
-    <color name="colorOrderItemBottomView">#edeff0</color>
+    <color name="colorOrderItemBottomView">#ced0d1</color>
 
 </resources>

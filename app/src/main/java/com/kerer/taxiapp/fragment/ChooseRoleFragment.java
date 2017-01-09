@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.kerer.taxiapp.DriverWaitingOrderActivity;
 import com.kerer.taxiapp.R;
 import com.kerer.taxiapp.SignInActivity;
 
@@ -37,6 +38,8 @@ public class ChooseRoleFragment extends Fragment implements View.OnClickListener
 
         mClientButton.setOnClickListener(this);
         mDriverButton.setOnClickListener(this);
+
+        startActivity(DriverWaitingOrderActivity.getIntent(getActivity()));
 
         return v;
     }

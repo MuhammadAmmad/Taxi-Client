@@ -15,11 +15,27 @@ public class Order {
     private String mDriverUid;
     private String mOrigin;
     private String mDestination;
+    private float mDistance;
+    private float mPayment;
     private Timestamp mTimeStart;
     private Timestamp mTimeFinish;
     private int mStatus;
+    private String mKey;
 
     public Order() {
+    }
+
+    public Order(String mClientUid, String mDriverUid, String mOrigin, String mDestination, float mDistance, float mPayment, int mStatus, String mKey) {
+        this.mClientUid = mClientUid;
+        this.mDriverUid = mDriverUid;
+        this.mOrigin = mOrigin;
+        this.mDestination = mDestination;
+        this.mDistance = mDistance;
+        this.mPayment = mPayment;
+        this.mTimeStart = mTimeStart;
+        this.mTimeFinish = mTimeFinish;
+        this.mStatus = mStatus;
+        this.mKey = mKey;
     }
 
     public String getmClientUid() {
@@ -76,6 +92,30 @@ public class Order {
 
     public void setmTimeFinish(Timestamp mTimeFinish) {
         this.mTimeFinish = mTimeFinish;
+    }
+
+    public float getmDistance() {
+        return mDistance;
+    }
+
+    public void setmDistance(float mDistance) {
+        this.mDistance = mDistance;
+    }
+
+    public float getmPayment() {
+        return mPayment;
+    }
+
+    public void setmPayment(float mPayment) {
+        this.mPayment = mPayment;
+    }
+
+    public String getmKey() {
+        return mKey;
+    }
+
+    public void setmKey(String mKey) {
+        this.mKey = mKey;
     }
 
     @Exclude

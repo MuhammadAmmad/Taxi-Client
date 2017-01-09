@@ -39,6 +39,9 @@
             android:name=".ClientCreateOrderActivity"
             android:label="@string/create_order"
             android:theme="@style/OrderActivityThame"/>
+        <activity android:name=".DriverWaitingOrderActivity"
+            android:label="Waiting orders"
+            android:theme="@style/OrderActivityThame"/>
     </application>
 
 </manifest>
