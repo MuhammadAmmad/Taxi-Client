@@ -156,6 +156,7 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
                 String origin = mRouteFromEd.getText().toString();
                 String destination = mRouteToEd.getText().toString();
                 callGoogleDirectionsApi(origin, destination);
+                createOrder();
             }
         });
 
@@ -230,6 +231,7 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
 
         mOrderStatusTv.setText(getString(R.string.create_order));
         mGoogleMap.clear();
+        enableDisableViews(true);
     }
 
     /**
@@ -242,6 +244,21 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
         mRouteToEd.setText(order.getmDestination());
         if (line == null) {
             callGoogleDirectionsApi(order.getmOrigin(), order.getmDestination());
+        }
+        enableDisableViews(false);
+    }
+
+    /**
+     * disabling views whet it need
+     * @param enable
+     */
+    private void enableDisableViews(boolean enable) {
+        mRouteToEd.setEnabled(enable);
+        mRouteFromEd.setEnabled(enable);
+        if (enable) {
+            mCreateOrderFab.setVisibility(View.VISIBLE);
+        } else {
+            mCreateOrderFab.setVisibility(View.GONE);
         }
     }
 
@@ -258,7 +275,7 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
                     Log.d(TAG, new Gson().toJson(response.body()));
                     if (response.body().getStatus().equals(OK)) {
                         drawPolyline(response.body());
-                        createOrder();
+
                     } else {
                         Toast.makeText(getActivity(), getString(R.string.something_goes_wrong), Toast.LENGTH_SHORT)
                                 .show();
@@ -312,11 +329,12 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
 
     /**
      * zooming map with two markers
+     *
      * @param markers - markers with what map will zooming
      */
-    private void zoomMapByMarkers(List<Marker> markers){
+    private void zoomMapByMarkers(List<Marker> markers) {
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for (Marker marker : markers){
+        for (Marker marker : markers) {
             builder.include(marker.getPosition());
         }
         LatLngBounds bounds = builder.build();
