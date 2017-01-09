@@ -37,7 +37,8 @@
             android:theme="@style/SignInActivityThame" />
         <activity
             android:name=".ClientCreateOrderActivity"
-            android:label="@string/create_order" />
+            android:label="@string/create_order"
+            android:theme="@style/OrderActivityThame"/>
     </application>
 
 </manifest>

@@ -9,11 +9,11 @@
         android:id="@+id/order_views_client_order_status_ed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorOrderStatusBackground"
+        android:background="@color/colorWhitetransparent"
         android:gravity="center"
         android:padding="12dp"
         android:text="@string/create_order"
-        android:textColor="@android:color/white" />
+        android:textColor="@color/colorOrderTextViewColor" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/order_views_client_create_order_fab"
@@ -23,13 +23,14 @@
         android:layout_above="@+id/order_views_client_order_details_card"
         android:src="@drawable/ic_fab_create_order"
         app:layout_anchor="@id/order_views_client_order_details_card"
-        app:layout_anchorGravity="top|right" />
+        app:layout_anchorGravity="top|right"
+        app:backgroundTint="@color/colorAccent"/>
 
     <LinearLayout
         android:id="@+id/order_views_client_order_details_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorSignInCardBackgrounf"
+        android:background="@color/colorWhite"
         android:orientation="vertical"
         android:padding="16dp"
         android:layout_gravity="bottom">
@@ -37,30 +38,30 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="@android:color/white">
+            android:textColorHint="@color/colorOrderTextViewColor">
 
             <com.kerer.taxiapp.custom_views.RobotoRegularEditText
                 android:id="@+id/order_views_client_route_from"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/from"
-                android:textColor="@android:color/white"
-                android:textColorHint="@android:color/white"
+                android:textColor="@color/colorOrderTextViewColor"
+                android:textColorHint="@color/colorOrderTextViewColor"
                 android:inputType="text"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="@android:color/white">
+            android:textColorHint="@color/colorOrderTextViewColor">
 
             <com.kerer.taxiapp.custom_views.RobotoRegularEditText
                 android:id="@+id/order_views_client_route_to"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/to"
-                android:textColor="@android:color/white"
-                android:textColorHint="@android:color/white"
+                android:textColor="@color/colorOrderTextViewColor"
+                android:textColorHint="@color/colorOrderTextViewColor"
                 android:inputType="text"/>
         </android.support.design.widget.TextInputLayout>
 

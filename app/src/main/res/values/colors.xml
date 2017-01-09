@@ -11,4 +11,11 @@
     <color name="colorSignInBackground">#2e373d</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorOrderStatusBackground">#aa4d6e87</color>
+
+
+    <color name="colorOrderPrimary">#2196F3</color>
+    <color name="colorOrderPrimaryDark">#1976D2</color>
+    <color name="colorOrderAccent">#e84c3d</color>
+    <color name="colorOrderTextViewColor">#5c5e61</color>
+    <color name="colorWhitetransparent">#99ffffff</color>
 </resources>

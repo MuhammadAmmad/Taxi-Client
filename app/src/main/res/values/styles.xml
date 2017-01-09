@@ -29,6 +29,13 @@
 
     </style>
 
+    <style name="OrderActivityThame" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorOrderPrimary</item>
+        <item name="colorPrimaryDark">@color/colorOrderPrimaryDark</item>
+        <item name="colorAccent">@color/colorOrderAccent</item>
+    </style>
+
     <style name="SignInEditTextStyle" parent="Widget.AppCompat.EditText">
         <item name="android:background">@color/colorSignInCardBackgrounf</item>
         <item name="android:textColorHint">@android:color/white</item>
@@ -40,7 +47,7 @@
     </style>
 
     <style name="MyTvStyle" parent="android:Widget.TextView">
-        <item name="android:textColor">#fff</item>
+        <item name="android:textColor">@color/colorOrderTextViewColor</item>
         <item name="android:textSize">12dp</item>
     </style>
 
