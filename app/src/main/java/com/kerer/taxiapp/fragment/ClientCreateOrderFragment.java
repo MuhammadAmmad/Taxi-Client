@@ -127,7 +127,6 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
             }
             mDatabase = FirebaseDatabase.getInstance().getReference();
         }
-
     }
 
     @Nullable
@@ -250,6 +249,7 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
 
     /**
      * disabling views whet it need
+     *
      * @param enable
      */
     private void enableDisableViews(boolean enable) {
@@ -501,4 +501,5 @@ public class ClientCreateOrderFragment extends Fragment implements OnMapReadyCal
             mGoogleApiClient.disconnect();
         }
     }
+
 }

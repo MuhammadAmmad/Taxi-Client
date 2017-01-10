@@ -10,4 +10,5 @@
     <dimen name="views_margin">16dp</dimen>
     <dimen name="order_list_item_card_padding">12dp</dimen>
     <dimen name="card_list_item_payment_text_size">12dp</dimen>
+    <dimen name="driver_order_controls_text_size">16dp</dimen>
 </resources>

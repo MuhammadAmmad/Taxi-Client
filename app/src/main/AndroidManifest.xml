@@ -42,6 +42,9 @@
         <activity android:name=".DriverWaitingOrderActivity"
             android:label="Waiting orders"
             android:theme="@style/OrderActivityThame"/>
+        <activity android:name=".DriverOrderActivity"
+            android:label="@string/order"
+            android:theme="@style/OrderActivityThame"/>
     </application>
 
 </manifest>

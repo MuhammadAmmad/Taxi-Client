@@ -35,7 +35,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * Created by ivan on 09.01.17.
+ *
  */
 
 public class DriverWaitingOrderFragment extends Fragment implements FirebaseDatabaseReferences, OrderStatuses {

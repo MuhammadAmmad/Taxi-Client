@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/fragment_client_create_order_map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MapsActivity"
+
+        />
+
+    <com.kerer.taxiapp.custom_views.RobotoRegularTextView
+        android:id="@+id/fragment_driver_order_timer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhitetransparent"
+        android:gravity="center"
+        android:padding="12dp"
+        android:text="Timer"
+        android:textColor="@color/colorOrderTextViewColor" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:background="@color/colorWhite">
+
+        <com.kerer.taxiapp.custom_views.RobotoRegularTextView
+            android:id="@+id/fragment_driver_order_get"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/get"
+            android:gravity="center"
+            android:textSize="@dimen/driver_order_controls_text_size"/>
+
+        <com.kerer.taxiapp.custom_views.RobotoRegularTextView
+            android:id="@+id/fragment_driver_order_origin"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/by_norigin"
+            android:textSize="@dimen/driver_order_controls_text_size"
+            android:gravity="center"/>
+
+        <com.kerer.taxiapp.custom_views.RobotoRegularTextView
+            android:id="@+id/fragment_driver_order_destination"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/by_ndestination"
+            android:gravity="center"
+            android:textSize="@dimen/driver_order_controls_text_size"/>
+
+        <com.kerer.taxiapp.custom_views.RobotoRegularTextView
+            android:id="@+id/fragment_driver_order_payed"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/payed"
+            android:gravity="center"
+            android:textSize="@dimen/driver_order_controls_text_size"/>
+    </LinearLayout>
+</RelativeLayout>

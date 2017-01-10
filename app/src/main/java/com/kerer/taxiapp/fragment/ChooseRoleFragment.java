@@ -19,14 +19,14 @@ import butterknife.ButterKnife;
  * Created by ivan on 03.01.17.
  */
 
-public class ChooseRoleFragment extends Fragment implements View.OnClickListener{
+public class ChooseRoleFragment extends Fragment implements View.OnClickListener {
 
     @BindView(R.id.fragment_choose_role_driver_button)
     Button mDriverButton;
     @BindView(R.id.fragment_choose_role_client_button)
     Button mClientButton;
 
-    public static ChooseRoleFragment newInstance(){
+    public static ChooseRoleFragment newInstance() {
         return new ChooseRoleFragment();
     }
 
@@ -46,15 +46,16 @@ public class ChooseRoleFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        int role = 0;
-        switch (v.getId()){
-            case R.id.fragment_choose_role_client_button:
-                role = 0;
-                break;
-            case R.id.fragment_choose_role_driver_button:
-                role = 1;
-                break;
-        }
-        startActivity(SignInActivity.createIntent(getActivity(), role));
+
+            int role = 0;
+            switch (v.getId()) {
+                case R.id.fragment_choose_role_client_button:
+                    role = 0;
+                    break;
+                case R.id.fragment_choose_role_driver_button:
+                    role = 1;
+                    break;
+            }
+            startActivity(SignInActivity.createIntent(getActivity(), role));
     }
 }
